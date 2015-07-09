@@ -3,7 +3,7 @@
 {% block body %}
   <div class="register">
  	 <h2>Sign Up</h2>
- 	 
+ 	 {% if error %}<font color=RED>Error : {{ error }}</font>{% endif %}
  	 <form action="" method=post>
  	 <dl>
  	 	<dd>ID
