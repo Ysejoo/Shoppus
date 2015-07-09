@@ -46,6 +46,12 @@ def query_db(query, args=(), one=False):
                for idx, value in enumerate(row)) for row in cur.fetchall()]
     return (rv[0] if rv else None) if one else rv
 
+def get_user_id(username):
+    rv = g.db.execute('select mid from member where mid = ?',
+                     [username]).fetchone()
+                     
+    return rv[0] if rv else None
+
 
 @app.before_request
 def before_request():
@@ -54,7 +60,6 @@ def before_request():
     if 'mid' in session:
         g.user = query_db('select * from user where mid = ?',
                           [session['mid']], one=True)
-
 
 @app.teardown_request
 def teardown_request(exception):
@@ -71,7 +76,25 @@ def main():
 
 @app.route("/register", methods=['GET', 'POST'])
 def goregister():
-    return render_template("register.html")
+    if g.user:
+        return redirect(url_for('main'))
+    error = None
+    if request.method == 'POST':
+        if not request.form['registerid']:
+            error = "YOU DIDN'T INPUT THE ID"
+        elif not request.form['registerpw']:
+            error = "YOU DID'T INPUT THE PW"
+        elif request.form['registerpw'] != request.form['registerpwRe']:
+            error = "THE TWO PW IS NOT CORRECT!"
+        elif get_user_id(request.form['registerid']) is not None:
+            error = "THE ID IS ALREADY TAKEN"
+        else:
+            g.db.execute('''insert into member (mid, mpw) values(?,?)''',
+                         [request.form['registerid'], request.form['registerpw']])
+            g.db.commit()
+            flash("YOU were succesfully registered and can login now!")
+            return redirect(url_for('main'))
+    return render_template("register.html", error=error)
 
 
 
