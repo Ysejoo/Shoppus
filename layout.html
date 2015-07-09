@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Shoppus</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='mystyle.css') }}">
+
+
+<div class=main>
+	<div class=logininfo>
+		login info
+		</br>
+		<a href="{{ url_for('goregister') }}"> register </a>
+	</div>
+	<div class=upper>
+		<div class=logo>
+		<a href="{{ url_for('main') }}">
+		<h1>Shoppus</h1>
+		</a>
+		</div>
+	</div>
+	<div class=category>
+		<hr width = "100%" size = "5" color="black">
+		
+		<center>
+		<h4>categories</h4>
+		<input type="button" value="clothes">
+		<input type="button" value="shoes">
+		<input type="button" value="hats">
+		<input type="button" value="pants">
+		<input type="button" value="accessories">
+		</center>
+		</br>
+	</div>
+	<div class=below>
+		{% block body %}{% endblock %}
+	</div>
+</div>
