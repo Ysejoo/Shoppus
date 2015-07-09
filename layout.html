@@ -6,7 +6,10 @@
 
 <div class=main>
 	<div class=logininfo>
-		login info
+		login info : 
+		{% if g.user %}
+		Hello {{ g.user }}
+		{% endif %}
 		</br>
 		<a href="{{ url_for('goregister') }}"> register </a>
 	</div>
