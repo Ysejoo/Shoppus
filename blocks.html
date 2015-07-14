@@ -1,23 +1,17 @@
 {% extends "layout.html" %}
 {% block title %}show info{% endblock %}
 {% block body %}
-	<div class=block>
-		block1
-	</div>
-	<div class=block>
-		block2
-	</div>
-	<div class=block>
-		block3
-	</div>
-	<div class=block>
-		block1
-	</div>
-	<div class=block>
-		block2
-	</div>
-	<div class=block>
-		block3
-	</div>
-  
+		{% if members %}
+		{% for m in members %}
+		<div class=block>
+		<dd> id : {{ m.mid }}  <dd> pw :  {{ m.mpw }}
+		</br>
+		</br>
+		<form action="{{ url_for('deletemember') }}" method=post>
+		<input type="text" name="deletethis" value = {{m.mid}}>
+		<input type="submit" value="delete this member">
+		</form>
+		</div>
+		{% endfor %}
+		{% endif %}
 {% endblock %}
