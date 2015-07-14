@@ -6,12 +6,19 @@
 
 <div class=main>
 	<div class=logininfo>
-		login info : 
+	logged info :
 		{% if g.user %}
-		Hello {{ g.user }}
-		{% endif %}
+		Hello <font color=blue>{{ g.user['mid'] }}!!!</font>
 		</br>
-		<a href="{{ url_for('goregister') }}"> register </a>
+		<a href="{{ url_for('logout') }}">logout</a>
+		{% else %}
+		<font color=red>None</font></br>
+		<a href="{{ url_for('login') }}">login</a>
+		</br>
+		<a href="{{ url_for('goregister') }}"> register</a>
+ 		{% endif %}
+		</br>
+		<a href="{{ url_for('showmember') }}"> show members</a>
 	</div>
 	<div class=upper>
 		<div class=logo>
