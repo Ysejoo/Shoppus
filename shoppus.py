@@ -6,15 +6,15 @@ Created on 2015. 7. 7.
 '''
 
 from __future__ import with_statement
-from sqlite3 import dbapi2 as sqlite3
-from contextlib import closing
 import time
+from sqlite3 import dbapi2 as sqlite3
 from hashlib import md5
 from datetime import datetime
+from contextlib import closing
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash
 from werkzeug.security import check_password_hash, generate_password_hash
-from pip._vendor.distlib._backport.tarfile import TUREAD
+
 
 
 #configuration
@@ -46,9 +46,9 @@ def query_db(query, args=(), one=False):
                for idx, value in enumerate(row)) for row in cur.fetchall()]
     return (rv[0] if rv else None) if one else rv
 
-def get_user_id(username):
+def get_user_id(userid):
     rv = g.db.execute('select mid from member where mid = ?',
-                     [username]).fetchone()
+                     [userid]).fetchone()
                      
     return rv[0] if rv else None
 
@@ -57,9 +57,9 @@ def get_user_id(username):
 def before_request():
     g.db = connect_db()
     g.user = None
-    if 'mid' in session:
-        g.user = query_db('select * from user where mid = ?',
-                          [session['mid']], one=True)
+    if 'id' in session:  
+        g.user = query_db('select * from member where mid = ?',
+                          [session['id']], one=True)
 
 @app.teardown_request
 def teardown_request(exception):
@@ -73,6 +73,30 @@ def teardown_request(exception):
 @app.route("/")
 def main():
     return render_template("blocks.html")
+
+@app.route("/login", methods = ['GET', 'POST'])
+def login():
+    if g.user:
+        return redirect(url_for('main'))
+    error = None
+    if request.method == 'POST':
+        user = query_db(''' select * from member where mid = ? ''', 
+                        [request.form['iid']], one = True)
+        if user is None:
+            error = "The ID is not exist"
+        elif user['mpw'] != request.form['ipw']:
+            error = "The PW is not correct"
+        else:
+            session['id'] = user['mid']
+            return redirect(url_for('main'))
+    return render_template("logininfo.html", error = error)
+
+@app.route("/logout")
+def logout():
+    session.pop('id', None)
+    return redirect(url_for('main'))
+
+
 
 @app.route("/register", methods=['GET', 'POST'])
 def goregister():
@@ -96,9 +120,16 @@ def goregister():
             return redirect(url_for('main'))
     return render_template("register.html", error=error)
 
+@app.route("/members")
+def showmember():
+    return render_template('blocks.html', members = query_db('''
+    select * from member'''))
 
-
-
+@app.route("/deletemember", methods=['POST'])
+def deletemember():
+    if request.form['deletethis']:
+        g.db.execute(''' delete from member where mid=?''', [request.form['deletethis']])
+    return render_template('blocks.html')
 
 if __name__ == "__main__":
     init_db()
