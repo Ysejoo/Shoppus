@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block body %}
+
+
+<div class="register">
+<form action="{{ url_for('emailcheck', addr = uemail) }}" method="POST">
+
+	<h2><font color=blue>Step2</font>&nbsp&nbspCheck Email</h2>
+ 	<dd><strong>Your Email</strong>
+ 	<dd>{{ uemail }}
+ 	<dd>
+ 	<a href="{{ url_for('sendemail', addr = uemail) }}">
+ 	{% if mssg %}
+ 	Resend codes
+ 	{% else %}
+ 	send codes
+ 	{% endif %}
+ 	</a>
+ 	
+ 	{% if mssg %}
+ 	<dd><font color=blue>{{ mssg }}</font>
+ 	{% endif %}
+ 	
+ 	<dd><strong>Enter the code</strong>
+ 	<dd><input type="text" name="inputcode"><input type="submit" value="check">
+ 	{% if error %}
+ 	<dd><font color=red><strong>{{ error }}</strong></font>
+ 	{% endif %}
+ 	 
+</form>
+</div>
+{% endblock %}
