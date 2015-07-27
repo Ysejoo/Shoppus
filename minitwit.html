@@ -1,0 +1,367 @@
+{% extends "layout.html" %}
+{% block title %}minitwit{% endblock %}
+{% block body %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js">
+</script>
+
+<div class=minitwit>
+<br>
+<div class=addtwit>
+	<i class="fa fa-user"></i>&nbsp;<font color="blue"><strong>{{ g.user['nick'] }}</strong></font>
+	<form action="{{ url_for('addtwit', addr=g.user['useremail']) }}" method=post name="addtwitform">
+	{% if error %}
+	<font color="red">{{ error }}</font><br>
+	{% endif %}
+<textarea name="inputtwit" rows="4" style="width:570px; overflow:hidden;" maxlength="100"
+			onclick="clearadd()" 
+			onkeyup="showcount()"
+			onKeyDown="autotextareaheight2( this )">
+What's on your mind?</textarea>
+	<br>
+	<span class="twit_input_counter" id="twit_input_counter">0/100</span>
+	<input type="submit" value="ADD">
+	</form>
+</div>
+<br>
+<hr width = "100%" size = "3" color="black">
+<br>
+
+{% for t in twits %}
+<div class="twits">
+	<table width="580">
+	<tr>
+	<td>
+	<i class="fa fa-user"></i>&nbsp;
+	{% if g.user['useremail']==t.useremail %}
+	<font color="blue"><strong>{{ t.nick }}</strong></font>
+	{% else %}
+	<font color="black"><strong>{{ t.nick }}</strong></font>	
+	{% endif %}
+	
+	{% if g.user['useremail']!=t.useremail %}
+	&nbsp;&nbsp;
+	<a href="{{ url_for('twitpluslike', idx = t.wallidx, 
+										clike = t.wlike, 
+										addr = g.user['useremail']) }}">
+	<small>
+	<i class="fa fa-plus"></i>like
+	</small>
+	</a>
+	{% endif %}
+	
+	{% if g.user['useremail']==t.useremail %}
+	&nbsp;&nbsp;
+	<a href="{{ url_for('deletetwit', idx = t.wallidx) }}">
+	<small>
+	<i class="fa fa-trash-o"></i>delete
+	</small>
+	</a>
+	{% endif %}
+	
+	&nbsp;&nbsp;
+	<font color="#26776F">
+	<i class="fa fa-clock-o" onmousemove="timepass({{t.wallidx}}, {{t.wtime}})"></i>
+	</font><small>
+	<span id="showtimepass{{t.wallidx}}" onmousemove="timepass({{t.wallidx}}, {{t.wtime}})"></span>
+	</small>
+	
+	</td>
+	<td align="right">
+	<font color="gray"><small>{{ t.wdate }}</small></font>
+	</td>
+	</tr>
+	</table> 
+	<pre>{{ t.wcontent }}</pre>
+	<div align="right">
+	<font color="pink"><i class="fa fa-heart"></i></font>&nbsp;{{ t.wlike }}&nbsp;
+	
+	</div>
+	<div class="twitaddcomment" id="twitaddcommentdiv">
+	<form action="{{ url_for('twitaddcomment', idx = t.wallidx, 
+											   addr=g.user['useremail']) }}" method="POST">
+	<table>
+	<tr><td>
+<textarea name="inputcomment" rows="2" style="width:530px; overflow:hidden;" maxlength="100"
+		  onKeyDown="autotextareaheight( this )">
+</textarea>
+	</td><td>
+	<input type="submit" value="ADD">
+	</td></tr>
+	</table>
+	</form>
+	</div>
+	{% for c in comments %}
+	{% if c.wallidx == t.wallidx %}
+		<div class="twitcommentline">
+		<table width="100%" bgcolor="#F8FFFF" 
+			   style="margin-bottom:1px; 
+			   border-bottom:1px solid skyblue">
+		<tr>
+		<td>
+		<strong>
+		{% if g.user['useremail'] == c.useremail %}
+		<font color="blue">{{ c.nick }}</font>
+		{% else %}
+		{{ c.nick }}
+		{% endif %}
+		</strong>
+		&nbsp;&nbsp;
+		<a href="javascript:showcomment({{ t.wallidx }}{{c.commentidx}})">
+		<small><i class="fa fa-share"></i>reply</small>
+		</a>
+		
+		{% if g.user['useremail'] != c.useremail %}
+		&nbsp;&nbsp;
+		<a href="{{ url_for('commentpluslike', cidx = c.commentidx, 
+											   clike = c.clike, 
+											   addr=g.user['useremail']) }}">
+		<small>
+		<i class="fa fa-plus"></i>like
+		</small>
+		</a>
+		{% endif %}
+		
+		{% if g.user['useremail'] == c.useremail %}
+		&nbsp;&nbsp;
+		<a href="{{ url_for('commentdelete', cidx = c.commentidx) }}">
+		<small>
+		<i class="fa fa-trash-o"></i>delete
+		</small>
+		</a>
+		{% endif %}
+		
+		&nbsp;&nbsp;
+		<font color="#26776F">	
+		<i class="fa fa-clock-o" 
+		   onmousemove="timepass2({{t.wallidx}}, {{c.commentidx}}, {{c.ctime}})"></i>
+		</font><small>
+		<span id="showtimepass2{{t.wallidx}}{{c.commentidx}}" 
+			  onmousemove="timepass2({{t.wallidx}}, {{c.commentidx}}, {{c.ctime}})"></span>
+		</small>
+		
+		<!-- TEST TIMEPASS -->
+		<!-- END TEST -->
+		
+		</td>
+		<td align=right><font color="gray"><small>{{ c.cdate }}</small></font></td>
+		</tr>
+		<tr>
+		<td colspan=2><pre>{{ c.ccontent }}</pre></td>
+		</tr>
+		<tr>
+		<td colspan=2 align=right>
+		<font color="pink"><i class="fa fa-heart"></i></font>&nbsp;{{ c.clike }}&nbsp;
+		</td>
+		</tr>
+		<tr>
+		<td colspan=2 valign="top">
+		
+		<!-- reply textarea -->
+		<div class="commentaddcomment" id="replyidx{{ t.wallidx }}{{ c.commentidx }}" style="height:0px">
+		<form action="{{ url_for('commentaddcomment', idx = t.wallidx,
+													  cidx = c.commentidx, 
+													  addr = g.user['useremail']) }}" method="post">
+		<i class="fa fa-share"></i>
+<textarea name="inputcommentreply" rows="2" style="width:485px; overflow:hidden;" maxlength="100">
+</textarea>
+		
+		<input type="submit" value="ADD">
+		</form>
+		</div>
+		<!-- end reply textarea -->
+		
+		</td>
+		</tr>
+		</table>		
+		</div>
+			<!-- Reply of Reply -->
+			{% for sc in cc %}
+			{% if c.commentidx == sc.commentidx %}
+				<div class="twitsubcommentline">
+				<table width="100%" bgcolor="#F8FFFF" 
+					   style="margin-bottom:1px; 
+					   border-bottom:1px solid skyblue">
+				<tr>
+				<td>
+					<strong>
+					{% if g.user['useremail'] == sc.useremail %}
+					<font color="blue">{{ sc.nick }}</font>
+					{% else %}
+					{{ c.nick }}
+					{% endif %}
+					</strong>
+					
+					{% if g.user['useremail'] != sc.useremail %}
+					&nbsp;&nbsp;
+					<a href="{{ url_for('commentcommentpluslike', ccidx = sc.ccommentidx, 
+																  cclike = sc.cclike, 
+																  addr=g.user['useremail']) }}">
+					<small>
+					<i class="fa fa-plus"></i>like
+					</small>
+					</a>
+					{% endif %}
+					
+					{% if g.user['useremail'] == sc.useremail %}
+					&nbsp;&nbsp;
+					<a href="{{ url_for('commentcommentdelete', ccidx = sc.ccommentidx) }}">
+					<small>
+					<i class="fa fa-trash-o"></i>delete
+					</small>
+					</a>
+					{% endif %}
+		
+					&nbsp;&nbsp;	
+					<font color="#26776F">
+					<i class="fa fa-clock-o" 
+					   onmousemove="timepass3({{t.wallidx}}, {{c.commentidx}}, {{sc.ccommentidx}}, {{sc.cctime}})"></i>
+					</font><small>
+					<span id="showtimepass3{{t.wallidx}}{{c.commentidx}}{{sc.ccommentidx}}" 
+						  onmousemove="timepass3({{t.wallidx}}, {{c.commentidx}}, {{sc.ccommentidx}}, {{sc.cctime}})"></span>
+					</small>
+					
+				</td>
+				<td align="right">
+					<font color="gray"><small>{{ sc.ccdate }}</small></font>
+				</td>
+				</tr>
+				<td colspan="2">
+					<pre>{{ sc.cccontent }}</pre>
+				</td>
+				<tr>
+				<td colspan=2 align=right>
+				<font color="pink"><i class="fa fa-heart"></i></font>&nbsp;{{ sc.cclike }}
+				</td>
+				</tr>
+				
+				</table>
+				</div>
+			{% endif %}
+			{% endfor %}
+			<!-- end reply of reply -->
+	{% endif %}
+	{% endfor %}
+</div>
+<br><br><br>
+{% endfor %}
+</div>
+
+
+<script type="text/javascript">
+function addtwit(){
+	var content = document.addtwitform.inputtwit.value;
+	content = content.replace(/\r\n/g, "\n");
+	content = content.replace(/\n/g, "\n");
+	content = content.replace(/\r/g, "\n");
+	document.addtwitform.inputtwit.value = content;
+	document.addtwitform.submit();
+}
+function clearadd(){
+	if(document.addtwitform.inputtwit.value=="What's on your mind?"){
+		document.addtwitform.inputtwit.value = "";
+	}
+}
+function showcount(){
+	var max = 100;
+	var count = document.addtwitform.inputtwit.value.length;
+	if(count >= max){
+		count = 100;
+		document.getElementById("twit_input_counter").style.color = "red";
+	}else{
+		document.getElementById("twit_input_counter").style.color = "black";
+	}
+	document.getElementById("twit_input_counter").innerHTML = count+"/100";
+}
+function autotextareaheight( txa ){
+    line = 2;
+    new_line = txa.value.split( "\n" ).length + 1;
+    if( new_line < line ) new_line = line;
+
+    txa.rows = new_line;
+}
+function autotextareaheight2( txa ){
+    line = 4;
+    new_line = txa.value.split( "\n" ).length + 1;
+    if( new_line < line ) new_line = line;
+
+    txa.rows = new_line;
+}
+function showcomment(idx){
+	var str = "replyidx"+idx;
+	if(document.getElementById(str).style.visibility == "visible"){
+		document.getElementById(str).style.height = "0px";
+		document.getElementById(str).style.visibility = "hidden";
+	}else{
+	document.getElementById(str).style.height = "40px";
+	document.getElementById(str).style.visibility = "visible";
+	}
+}
+
+function timepass(idx, intime){
+	var str = "showtimepass"+idx;
+	var tp = (parseInt(Date.now()/1000)-(parseInt(intime)));
+	if(tp < 60){
+		document.getElementById(str).innerHTML = tp+"sec";
+	}else if(tp < 3600){
+		document.getElementById(str).innerHTML = parseInt(tp/60)+"min";
+	}else if(tp < 86400){
+		document.getElementById(str).innerHTML = parseInt(tp/3600)+"hours";
+	}else if(tp < 2592000){
+		document.getElementById(str).innerHTML = parseInt(tp/86400)+"days";
+	}else if(tp < 31536000){
+		document.getElementById(str).innerHTML = parseInt(tp/2592000)+"months";
+	}else{
+		document.getElementById(str).innerHTML = parseInt(tp/31536000)+"year";
+	}
+}
+function timepass2(idx, cidx, intime){
+	var str = "showtimepass2"+idx+cidx;
+	var tp = (parseInt(Date.now()/1000)-(parseInt(intime)));
+	if(tp < 60){
+		document.getElementById(str).innerHTML = tp+"sec";
+	}else if(tp < 3600){
+		document.getElementById(str).innerHTML = parseInt(tp/60)+"min";
+	}else if(tp < 86400){
+		document.getElementById(str).innerHTML = parseInt(tp/3600)+"hours";
+	}else if(tp < 2592000){
+		document.getElementById(str).innerHTML = parseInt(tp/86400)+"days";
+	}else if(tp < 31536000){
+		document.getElementById(str).innerHTML = parseInt(tp/2592000)+"months";
+	}else{
+		document.getElementById(str).innerHTML = parseInt(tp/31536000)+"year";
+	}
+}
+function timepass3(idx, cidx, ccidx, intime){
+	var str = "showtimepass3"+idx+cidx+ccidx;
+	var tp = (parseInt(Date.now()/1000)-(parseInt(intime)));
+	if(tp < 60){
+		document.getElementById(str).innerHTML = tp+"sec";
+	}else if(tp < 3600){
+		document.getElementById(str).innerHTML = parseInt(tp/60)+"min";
+	}else if(tp < 86400){
+		document.getElementById(str).innerHTML = parseInt(tp/3600)+"hours";
+	}else if(tp < 2592000){
+		document.getElementById(str).innerHTML = parseInt(tp/86400)+"days";
+	}else if(tp < 31536000){
+		document.getElementById(str).innerHTML = parseInt(tp/2592000)+"months";
+	}else{
+		document.getElementById(str).innerHTML = parseInt(tp/31536000)+"year";
+	}
+}
+
+</script>
+{% with mssg = get_flashed_messages() %}
+	{% if mssg %}
+	<script type="text/javascript">
+	alert("You already liked this~!");
+	</script>
+	{% endif %}
+{% endwith %}
+<script type="text/javascript">
+$('iframe').load(function() {
+  this.style.height =
+  this.contentWindow.document.body.offsetHeight + 20 +'px';
+});
+</script>
+
+{% endblock %}
