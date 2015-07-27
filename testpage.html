@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Test Page{% endblock %}
+{% block body %}
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js">
+</script>
+<script type="text/javascript">
+$(function(){
+	$("dd:not(:first)").css("display", "none");
+	$("dl dt").click(function(){
+		if($("+dd", this).css("display")=="none"){
+			$(this).siblings("dd").slideUp("slow");
+			$("+dd", this).slideDown("slow");
+		}
+	});
+});
+
+</script>
+<script type="text/javascript">
+	
+</script>
+<style type="text/css">
+*{
+margin:0;
+padding:0;
+}
+dl{
+width : 400px;
+margin:50px auto;
+}
+dl dt{
+background : #7CADB6;
+border-bottom:1px solid #FFFFFF;
+cursor:pointer;
+}
+dl dd{
+border:1px solid #7CADB6;
+border-top:none;
+height:100px;
+}
+</style>
+<div id="container">
+<dl>
+<dt>1</dt>
+<dd><p>asdf</p></dd>
+<dt>2</dt>
+<dd><p>fdsa</p></dd>
+<dt>3</dt>
+<dd><p>asdfasdfasdf</p></dd>
+<dt>3</dt>
+<dd><p>asdfasdfasdf</p></dd>
+<dt>3</dt>
+<dd><p>asdfasdfasdf</p></dd>
+<dt>3</dt>
+<dd><p>asdfasdfasdf</p></dd>
+</dl>
+</div>
+
+{{d}}
+{% endblock%}
+
+
+{% block cate %}
+{% endblock %}
