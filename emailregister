@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block body %}
+<div class="register">
+	<h2><font color=blue>Step1</font>&nbsp&nbspRegist Email</h2>
+ 	{% if error %}<font color=RED>Error : {{ error }}</font>{% endif %}
+ 	<form action="" method=post>
+ 	<dl>
+ 		<dd><strong>Email</strong>
+ 	 	<dd><input type="email" name="inputemail">
+ 	 	<dd><strong>Password</strong>
+ 	 	<dd><input type="password" name="inputpw">
+
+ 		<dd><div class=actions><input type="submit" value="regist"></div>
+ 	</dl>
+ 	</form>
+ 	 
+</div>
+{% endblock %}
