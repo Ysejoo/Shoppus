@@ -2,13 +2,31 @@ body{
 	background : white;
 	font-size : 14px;
 	height : 100%;
+	font-family: 'Trebuchet MS', sans-serif;
 }
-
+.sample { 
+	font-size: 50px; 
+	color: blue; 
+}
 a {
     color: #26776F;
+    font-weight : bold;
+    text-decoration : none;
+}
+a:active{
+	color : #B7F0B1;
 }
 a:hover {
-    color: #333;
+    color : #B7F0B1;
+}
+
+span.twit_input_counter{
+	float:right;
+	font-weight : bold;
+	color : solid gray;
+}
+span.twit_rightalign{
+	float:right;	
 }
 
 div.main{
@@ -48,10 +66,25 @@ div.main div.below{
 div.below div.block{
 	background:#D6F0FF;
 	margin : 10px;
-	width : 340px;
+	width : 445px;
 	height : 600px;
-	padding : 50px;
 	float : left;
+}
+div.block div.blockbackground{
+	width : 445px;
+	height : 600px;
+	background-image : url(./imgs/boyung.jpg);
+	z-index : 1;
+}
+div.block div.blockunder{
+	background: black;
+	top : -200px;
+	width : 445px;
+	height : 200px;
+	opacity : 0.5;
+	color : white;
+	position : relative;
+	z-index : 2;
 }
 
 div.below div.register{
@@ -59,13 +92,71 @@ div.below div.register{
 	margin : 10px;
 	width : 400px;
 	height : 600px;
-	
+}
+div.below div.login{
+	padding-left : 200px;
+	margin : 10px;
+	width : 400px;
+	height : 600px;
+}
+
+div.below div.minitwit{
+	padding-left : 400px;
+	margin : 0px;
+	width : 600px;
+	height : 600px auto;
+}
+div.minitwit div.addtwit{
+	background : #F8FFFF;
+	margin : 10px;
+	width : 580px;
+	height : 130px auto;
+}
+div.minitwit div.twits{
+	background : #FCFCFC;
+	margin : 10px;
+	width : 580px;
+	height : 130px auto;
+	white-space : normal;
+}
+div.minitwit div.twitcommentline{
+	background : #F6F6F6;
+	margin-left : 10px;
+	width : 560px;
+	height : 50px auto;
+}
+div.minitwit div.twitsubcommentline{
+	background : #F6F6F6;
+	margin-left : 30px;
+	width : 540px;
+	height : 50px auto;
+}
+div.minitwit div.twitaddcomment{
+	background : #FCFCFC;
+	width : 580px;
+	height : 50px auto;
+}
+div.minitwit div.commentaddcomment{
+	background : #F8FFFF;
+	width : 555px;	
+	height : 0px auto;
+	visibility : hidden;
 }
 
 
-
-
 input[type="submit"] {
+    background: #105751;
+    border: 1px solid #073B36;
+    padding: 1px 3px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    color: white;
+}
+
+input[type="button"] {
     background: #105751;
     border: 1px solid #073B36;
     padding: 1px 3px;
