@@ -4,14 +4,40 @@
 		{% if members %}
 		{% for m in members %}
 		<div class=block>
-		<dd> id : {{ m.mid }}  <dd> pw :  {{ m.mpw }}
-		</br>
-		</br>
-		<form action="{{ url_for('deletemember') }}" method=post>
-		<input type="text" name="deletethis" value = {{m.mid}}>
-		<input type="submit" value="delete this member">
-		</form>
-		</div>
+			<!-- Block Background -->
+			<div class=blockbackground>
+			<dd> id : {{ m.useremail }}</dd>  
+			<dd> pw :  {{ m.pw }}</dd>
+			<dd> nickname : {{m.nick}}</dd>
+			<dd> birth : {{m.birth}}</dd>
+			<dd> gender : {{m.sex}}</dd>
+			<dd> checked : {{m.checked}}</dd>
+			<dd> join date : {{m.userdate}}</dd>
+			<form action="{{ url_for('deletemember', thisemail = m.useremail) }}" method = "POST">
+			<dd><input type=submit value="delete this member"></dd>
+			</form>
+			</div>
+			
+			
+			
+			<!-- Blocks Under -->
+			<div class=blockunder>
+			
+				contents<br>
+				<br>
+				<dd>this is {{ m.nick }}'s shopping page</dd>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				like : 100  
+				follower : 999
+			</div>	
+		</div>		
+		
 		{% endfor %}
 		{% endif %}
 {% endblock %}
