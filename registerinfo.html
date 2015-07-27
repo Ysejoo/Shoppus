@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block body %}
+  <div class="register">
+  	 <h2><font color=blue>Step3</font>&nbsp&nbspMore Informations</h2>
+ 	 {% if error %}<font color=RED>Error : {{ error }}</font>{% endif %}
+ 	 <form action="{{ url_for('registerinfo', addr = uemail) }}" method="POST">
+ 	 <input type="hidden" name="inputemail" value="{{uemail}}">
+ 	 <dl>
+ 	 <dd><strong>Nickname</strong></dd>
+ 	 <dd><input type=text name="inputnickname"></dd>
+ 	 <dd><strong>Birth</strong></dd>
+ 	 <dd><select name="inputbirth"></dd>
+ 	 	{% for i in range(2015, 1915, -1) %}
+ 	 	<option value="{{ i }}">{{ i }}</option>
+ 	 	{% endfor %}
+ 	 	</select>
+ 	 <dd><strong>Gender</strong></dd>
+ 	 <dd><input type=radio checked=true name="inputgender" value="male">male
+ 	 	 <input type=radio name="inputgender" value="female">female</dd>
+ 	 <dd>&nbsp</dd>
+ 	 <dd><strong>Choose your favor</strong><font color=gray><small>(option)</small></font></dd>
+ 	 <dd><input type=checkbox name="ch1">option1 
+ 	 	<input type=checkbox name="ch2">option1 
+ 	 	<input type=checkbox name="ch3">option1 
+ 	 	<input type=checkbox name="ch4">option1 
+ 	 </dd>
+ 	 <dd><input type=checkbox name="ch5">option1 
+ 	 	<input type=checkbox name="ch6">option1 
+ 	 	<input type=checkbox name="ch7">option1
+ 	 	<input type=checkbox name="ch8">option1 
+ 	 </dd>
+ 	 <dd>&nbsp</dd>
+ 	 <dd><input type=submit value="save"></dd>
+ 	 </dl>
+ 	 </form>
+  </div>
+{% endblock %}
