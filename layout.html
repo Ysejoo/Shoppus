@@ -1,62 +1,85 @@
+<?
+session_start();
+include("dbconnection.php");
+$useremail=$_SESSION['useremail'];
+
+if($useremail){
+$query= "select * from users where useremail='$useremail';";
+$result = mysql_query($query);
+$check = mysql_fetch_array($result);
+$nick = $check['nick'];
+	}
+else{}
+?>
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-<title>Shoppus::{% block title %}{% endblock %}</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/mystyle.css') }}">
-<link rel=stylesheet href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+<title>Shoppus</title>
+<link rel=stylesheet type=text/css href='css/mystyle.css'>
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
 <div class=main>
-	<div class=logininfo>
-	logged info :
-		{% if g.user %}
-		<font color=blue>{{ g.user['useremail'] }}</font>
-		<br>
-		<a href="{{ url_for('logout') }}">logout</a>
-		<br>
-		<a href="{{ url_for('minitwit') }}"> minitwit</a>
-		<br><br>
-		<a href="{{ url_for('showmember') }}"> show members</a>
-		<br>
-		<a href="{{ url_for('showcheckcodes') }}"> show check codes</a>
-		{% else %}
-		<font color=red>None</font></br>
-		<a href="{{ url_for('login') }}">login</a>
-		<br>
-		<a href="{{ url_for('emailregist') }}"> register</a>
- 		{% endif %}
-		<br><br>
-		<a href="{{ url_for('testpage') }}"> test page</a>
-		<br>
-		<a href="{{ url_for('test_minitwit') }}"> minitwit test</a>
-	</div>
-	<div class=upper>
-		<div class=logo>
-		<a href="{{ url_for('main') }}">
-		<h1>Shoppus</h1>
-		</a>
-		</div>
-	</div>
-	<div class=category>
-		{% block cate %}{% endblock %}
-		<hr width = "100%" size = "5" color="black">
-		<center>
-		<h4>categories</h4>
-		<input type="checkbox" value="clothes">option1
-		<input type="checkbox" value="shoes">option2
-		<input type="checkbox" value="hats"> option3
-		<input type="checkbox" value="pants">option4
-		<input type="checkbox" value="accessories">option5
-		<input type="button" value="find">
-		</center>
-		<br>
-	</div>
-	<div class=below>
-		{% block body %}{% endblock %}
-	</div>
+  <div class=logininfo>
+    <? if($result){
+	echo " $nick 님 안녕하세요.";
+	?>
+    <a href='logout.php'>로그아웃</a> <br>
+    <? }
+	else{
+		echo "쇼퍼스 회원이 아니신가요?";
+		?>
+    &nbsp;&nbsp;<a href='emailregist.php'> 가입하기</a> <br>
+    <?
+		}
+	?>
+    <br>
+    <a href='login.php'>로그인</a> <br>
+    <a href='minitwit.php'> 미니트윗 </a> <br>
+    <br>
+    <a href='blocks.php'> 회원보기 </a> <br>
+    <a href='showcheckcodes.php'> 체크코드 확인</a></br>
+    <br>
+    <a href='testpage.php'> test page</a> <br>
+    <a href='test_minitwit.php'> minitwit test</a> 
+  </div>
+  <div class=upper>
+    <div class=logo> <a href='index.php'>
+      <h1>Shoppus</h1>
+      </a>
+    </div>
+  </div>
+  <div class=category>
+	
+  </div>
 </div>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js">
+</script>
+<script type="text/javascript">
+	function category_resize(){
+			
+	}
+
+</script>
 <script>
+
+    // html dom 이 다 로딩된 후 실행된다.
+    $(document).ready(function(){
+        // menu 클래스 바로 하위에 있는 a 태그를 클릭했을때
+        $(".menu>a").click(function(){
+            var submenu = $(this).next("ul");
+ 
+            // submenu 가 화면상에 보일때는 위로 보드랍게 접고 아니면 아래로 보드랍게 펼치기
+            if( submenu.is(":visible") ){
+                submenu.slideUp();
+            }else{
+                submenu.slideDown();
+            }
+        });
+    });
+</script>
+<script>
+
 var head = document.getElementsByTagName('head')[0],
     style = document.createElement('style');
 style.type = 'text/css';
@@ -65,4 +88,4 @@ head.appendChild(style);
 setTimeout(function(){
     head.removeChild(style);
 }, 0);
-</script>  
+</script> 
