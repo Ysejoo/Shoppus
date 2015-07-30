@@ -42,18 +42,19 @@ div.main div.logininfo{
 }
 div.main div.upper{
 	background : white;
-	height : 400px;
+	height : 50px;
 	padding : 50px;
 }
 
 div.upper div.logo{
 	background : white;	
-	padding-top : 300px;
+	padding-top : 10px;
 	text-align : center;
 }
 
 div.main div.category{
 	background : #C2E2E8;
+	height : 100px;
 }
 
 div.main div.below{
@@ -143,6 +144,14 @@ div.minitwit div.commentaddcomment{
 	visibility : hidden;
 }
 
+div.category div.menu{
+	background : skyblue;
+	width : 150px;
+	height : 150px;	
+	float : left;
+	margin : 10px;
+}
+
 
 input[type="submit"] {
     background: #105751;
@@ -155,7 +164,6 @@ input[type="submit"] {
     -webkit-border-radius: 2px;
     color: white;
 }
-
 input[type="button"] {
     background: #105751;
     border: 1px solid #073B36;
@@ -167,3 +175,8 @@ input[type="button"] {
     -webkit-border-radius: 2px;
     color: white;
 }
+
+<style>
+    .menu a{cursor:pointer;}
+    .menu .hide{display:none;}
+</style>
